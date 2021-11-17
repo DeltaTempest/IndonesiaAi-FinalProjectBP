@@ -25,13 +25,13 @@ sent_subject = input(
 sent_body = input(
     str("Masukkan pesan yang akan dikirim lalu akhiri dengan enter: "))
 
-email_text = """\
-From: %s
-To: %s
-Subject: %s
+# email_text = """\
+# From: %s
+# To: %s
+# Subject: %s
 
-%s
-""" % (sent_from, ", ".join(penerima), sent_subject, sent_body)
+# %s
+# """ % (sent_from, ", ".join(penerima), sent_subject, sent_body)
 
 
 # =============================================================================
