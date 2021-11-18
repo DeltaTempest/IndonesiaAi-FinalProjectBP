@@ -2,7 +2,7 @@ import smtplib
 import getpass
 
 def menambahkanEmailBaru():
-    gmailPenerima  = str(input("Silahkan masukan email penerima:"))
+    gmailPenerima = str(input("Silahkan masukan email penerima:"))
     with open("receiver.txt", "r") as file:
         emailPenerima = file.read();
         emailPenerimaList = emailPenerima.split("\n")
@@ -10,10 +10,12 @@ def menambahkanEmailBaru():
     for email in emailPenerimaList:
         if email == gmailPenerima:
             print("Email telah ada, silahkan masukan email yang lain!")
-            menambahkanEmailBaru()
+            return False
         elif email != gmailPenerima:
             with open("receiver.txt", "a") as file:
                 file.write(gmailPenerima + "\n")
+                print("Email telah ditambahkan")
+                break
 
 def mencariEmail(email):
     print("Mencari email...")
@@ -22,12 +24,12 @@ def mencariEmail(email):
         listEmailPenerima = emailPenerima.split("\n")
     for emails in listEmailPenerima:
         if emails == email:
-            print("Email ketemu!")
+            
             return emails
         
         elif emails != email:
             continue
-    print("Tidak menemukan email yang anda cari!")
+    return False
   
 def mengirimEmail(emailPengirim, password, emailPenerima):
     emailTeks = str(input("Silahkan masukan pesan: "))
@@ -44,7 +46,9 @@ def mengirimEmail(emailPengirim, password, emailPenerima):
         print("Error: " + e)
 
 gmailUser = str(input("Silahkan masukan email anda:"))
-gmailPassword = str(input("Masukan password anda:"))
+gmailPassword = getpass.getpass("Masukan password email: ")
+
+
 
 print("Selamat datang di program pengirim email!")
 while True:
@@ -53,23 +57,42 @@ while True:
 
     if randInt == 1:
         #MENAMBAHKAN EMAIL KE receiver.txt
-        menambahkanEmailBaru()
-        break
+        while True:
+            if menambahkanEmailBaru() == False:
+                continue
+            else:
+                break    
+        continue
     elif randInt == 2:
         #MENCARI EMAIL DI receiver.txt
         #Cek apakah receiver.txt ada isinya atau tidak
         with open('receiver.txt', 'r') as listReceiver:
             receipentEmail = listReceiver.read()
             penerima = receipentEmail.split("\n")
-        if len(penerima) == 0:
+        
+        print(penerima)
+        if len(penerima) == 1:
             print("receiver.txt kosong! Silahkan masukan email penerima baru!")
             menambahkanEmailBaru()
         #receiver.txt ADA ISINYA DAN MENCARI EMAIL DENGAN METHOD mencariEmail
-        elif len(penerima) > 0:
-            emailDicari = str(input("Silahkan masukan email yang ingin anda cari: "))
-            emailPenerima = mencariEmail(emailDicari)
-            mengirimEmail(gmailUser, gmailPassword, emailPenerima)
-            break            
+        elif len(penerima) > 1:
+            while True:
+                emailDicari = str(input("Silahkan masukan email yang ingin anda cari: "))
+                emailPenerima = mencariEmail(emailDicari)
+                
+                if emailPenerima == "":
+                    print("Tolong Masukan email yang benar!")
+                    continue
+                if emailPenerima == False:
+                    print("Email tidak ditemukan!")
+                    break
+                else:
+                    print("Email ketemu!")
+                    mengirimEmail(gmailUser, gmailPassword, emailPenerima)
+                    break
+            continue
+            
+                      
     elif randInt == 3:
         break;
     
