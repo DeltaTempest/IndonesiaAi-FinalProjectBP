@@ -41,9 +41,23 @@ def mengirimEmail(emailPengirim, password, emailPenerima):
         server.sendmail(emailPengirim, emailPenerima, emailTeks)
         server.close
         
-        print('email sent')
+        print('Email terkirim!')
     except Exception as e:
         print("Error: " + e)
+
+def showEmailList():
+    with open('receiver.txt', 'r') as file:
+        email = file.read()
+        emailList = email.split("\n")
+    i = 0
+    print("List Email tujuan pada receiver.txt")
+    for email in emailList:
+        if email == "":
+            continue
+        i+=1
+        print(i ,". " + email)
+    
+    print("")
 
 gmailUser = str(input("Silahkan masukan email anda:"))
 gmailPassword = getpass.getpass("Masukan password email: ")
@@ -53,7 +67,7 @@ gmailPassword = getpass.getpass("Masukan password email: ")
 print("Selamat datang di program pengirim email!")
 while True:
     
-    randInt = int(input("Apakah anda ingin lakukan?\n\t1. Menambahkan email baru\n\t2. Mencari email pada emailList\n\t3. Keluar\n"))
+    randInt = int(input("Apakah anda ingin lakukan?\n\t1. Menambahkan email baru\n\t2. Mengirim Email\n\t3. Melihat list email\n\t4. Keluar\n"))
 
     if randInt == 1:
         #MENAMBAHKAN EMAIL KE receiver.txt
@@ -70,22 +84,22 @@ while True:
             receipentEmail = listReceiver.read()
             penerima = receipentEmail.split("\n")
         
-        print(penerima)
         if len(penerima) == 1:
             print("receiver.txt kosong! Silahkan masukan email penerima baru!")
             menambahkanEmailBaru()
         #receiver.txt ADA ISINYA DAN MENCARI EMAIL DENGAN METHOD mencariEmail
         elif len(penerima) > 1:
+            showEmailList()
             while True:
-                emailDicari = str(input("Silahkan masukan email yang ingin anda cari: "))
+                emailDicari = str(input("Silahkan masukan email tujuan anda: "))
                 emailPenerima = mencariEmail(emailDicari)
                 
                 if emailPenerima == "":
                     print("Tolong Masukan email yang benar!")
                     continue
                 if emailPenerima == False:
-                    print("Email tidak ditemukan!")
-                    break
+                    print("Email tidak ditemukan!, Harap masukan email tujuan bukan angka")
+                    continue
                 else:
                     print("Email ketemu!")
                     mengirimEmail(gmailUser, gmailPassword, emailPenerima)
@@ -94,10 +108,12 @@ while True:
             
                       
     elif randInt == 3:
-        break;
+        showEmailList()
     
+    elif randInt == 4:
+        break
     else:
-        print("Masukan argumen yang tepat!")
+        print("Mohon masukan angka yang sesuai")
 
 print("Program Selesai, terimakasih")
     
